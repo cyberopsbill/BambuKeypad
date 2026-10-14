@@ -1,0 +1,13 @@
+[project]
+name = "bambukeypad"
+version = "0.1.0"
+description = "Bridge between the Bambu Keypad Logi plugin and Bambu Studio on macOS"
+requires-python = ">=3.11"
+dependencies = []  # standard library only
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

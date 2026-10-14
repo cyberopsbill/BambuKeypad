@@ -1,0 +1,10 @@
+Bambu Keypad is adapted from Fusion-LogiMX by Craig Ulliott
+(https://github.com/craigulliott/Fusion-LogiMX), MIT License, starting from
+commit 44b81854085dd6a0797c183e4244690dba292863.
+
+From upstream: plugin/ (the Logi plugin, renamed and with a configurable port),
+docs/protocol.md (the protocol, with a new port), ruff.toml, .gitignore and LICENSE.
+bridge/ is new and replaces upstream's Fusion add-in. Its navigator follows the
+same page, Back and More rules. mcp-server/ was not carried over.
+
+The original copyright notice is kept in LICENSE.

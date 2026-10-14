@@ -1,0 +1,16 @@
+type: plugin4
+name: BambuKeypad
+displayName: Bambu Keypad
+description: Keys for Bambu Studio on macOS. Needs the Bambu Keypad bridge running. Adapted from Fusion Keypad (Fusion-LogiMX) by Craig Ulliott.
+version: 0.1.0
+author: Bill Kach
+minimumLoupedeckVersion: 6.1
+pluginType: remote
+pluginRuntime: nodejs
+entryPoint: index.mjs
+pluginFolderMac: .
+
+supportedDevices:
+    - MxCreativeKeypad
+
+pluginCapabilities:

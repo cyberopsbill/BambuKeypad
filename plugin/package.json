@@ -1,0 +1,30 @@
+{
+  "name": "bambu-keypad-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Logi Actions plugin that shows the keys the Bambu Keypad bridge sends and reports presses back. Adapted from Fusion-LogiMX by Craig Ulliott.",
+  "author": "Bill Kach (adapted from Craig Ulliott)",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "scripts": {
+    "build": "npm run typecheck && node esbuild.config.js",
+    "watch": "node esbuild.config.js --watch",
+    "typecheck": "tsc",
+    "test": "BAMBU_KEYPAD_PLUGIN_LOG=/dev/null node --test \"test/**/*.test.ts\"",
+    "link": "logitoolkit link",
+    "unlink": "logitoolkit unlink",
+    "log": "touch ~/Library/Logs/BambuKeypad-plugin.log && tail -n 50 -f ~/Library/Logs/BambuKeypad-plugin.log"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "dependencies": {
+    "@logitech/plugin-sdk": "0.1.1"
+  },
+  "devDependencies": {
+    "@logitech/plugin-toolkit": "0.1.1",
+    "@types/node": "^22.20.4",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
