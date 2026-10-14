@@ -5,7 +5,7 @@ import { afterEach, test } from 'node:test';
 import { connectToAddin, type AddinLink } from '../src/addin-link.ts';
 import type { KeysMessage } from '../src/protocol.ts';
 
-// Each test plays the add-in with a real TCP server on a free local port.
+// Each test plays the bridge with a real TCP server on a free local port.
 
 let server: net.Server | undefined;
 let link: AddinLink | undefined;
@@ -94,7 +94,7 @@ test('sends presses as one JSON line', async () => {
   assert.equal(data, '{"type":"press","slot":4,"layout":3}\n');
 });
 
-test('reports a lost connection and reconnects when the add-in is back', async () => {
+test('reports a lost connection and reconnects when the bridge is back', async () => {
   const { port, connection } = await listen();
   const seen = recorder();
   link = connectToAddin(port, seen.handlers);

@@ -37,7 +37,7 @@ function show(faces: KeyFace[]): void {
   bridge.refresh(slots.map((slot, index) => slot.show(faces[index] ?? BLANK)));
 }
 
-// The add-in link's retry timer would keep this process alive after the
+// The bridge link's retry timer would keep this process alive after the
 // service stops the plugin, so leave when the service connection closes.
 bridge.onClose(() => {
   log('Logi Plugin Service disconnected; exiting');
