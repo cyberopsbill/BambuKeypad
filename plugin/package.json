@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Logi Actions plugin that shows the keys the Bambu Keypad bridge sends and reports presses back. Adapted from Fusion-LogiMX by Craig Ulliott.",
-  "author": "Bill Kach (adapted from Craig Ulliott)",
+  "author": "Bill Kachersky (adapted from Craig Ulliott)",
   "type": "module",
   "main": "./dist/index.mjs",
   "scripts": {
