@@ -9,8 +9,8 @@ This is the file to edit to change what the keypad offers.
 - A key that opens another page is a `Page`. Pages that don't fit get a More key.
 - Menu titles must match Bambu Studio exactly, including "...". Run
   `python3 -m bambukeypad check` with Bambu Studio open to confirm every one.
-- Every shortcut here was checked against Bambu Studio 02.08.02.61: its menu bar,
-  and src/slic3r/GUI/KBShortcutsDialog.cpp at tag v02.08.02.61. See docs/shortcuts.md.
+- Every shortcut here was checked against Bambu Studio 02.09.01.70: its menu bar,
+  and src/slic3r/GUI/KBShortcutsDialog.cpp at tag v02.09.01.70. See docs/shortcuts.md.
 """
 
 from __future__ import annotations

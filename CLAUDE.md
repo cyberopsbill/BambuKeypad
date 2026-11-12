@@ -27,10 +27,10 @@ README.md covers setup, docs/protocol.md the link, and docs/shortcuts.md what ea
 - **Port** 47833, from `~/Library/Application Support/BambuKeypad/config.json` on both sides.
   Upstream uses 47823 and 47824.
 
-## Facts established (Bambu Studio 02.08.02.61, macOS, 2026-10-13)
+## Facts established (Bambu Studio 02.09.01.70, macOS, 2026-11-12)
 
 - **Bundle id:** `com.bambulab.bambu-studio`. Process name: `BambuStudio`.
-- **Shortcuts:**
+- **Shortcuts** (first checked at 02.08.02.61; KBShortcutsDialog.cpp is identical at v02.09.01.70):
   - Print plate is ⌘⇧G, not ⌘P.
   - ⌘G is Export plate sliced file. Export G-code is menu-only.
   - Auto-orient is ⇧R. Lay flat is F. Fit is Z. Views are ⌘0–⌘7.

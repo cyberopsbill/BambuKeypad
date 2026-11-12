@@ -1,12 +1,15 @@
 # Bambu Studio actions, verified
 
-Checked on 2026-10-13 against **Bambu Studio 02.08.02.61** (macOS), from two sources:
+Checked on 2026-11-12 against **Bambu Studio 02.09.01.70** (macOS), from two sources:
 
 1. The live menu bar, read through Accessibility. `python3 -m bambukeypad check`
    repeats this for every menu path in `bridge/bambukeypad/pages.py`; all 22 were found.
-2. `src/slic3r/GUI/KBShortcutsDialog.cpp` at tag `v02.08.02.61`, which is the
-   app's Help → Keyboard Shortcuts list. Its Global tab was also read on screen
-   and matches.
+2. `src/slic3r/GUI/KBShortcutsDialog.cpp` at tag `v02.09.01.70`, which is the
+   app's Help → Keyboard Shortcuts list. It is identical to `v02.08.02.61`, where
+   the Global tab was also read on screen and matched. The menu accelerators in
+   `MainFrame.cpp` changed only for Show Labels, which the keypad doesn't use.
+
+First checked on 2026-10-13 against 02.08.02.61. No key changed in 02.09.01.70.
 
 On macOS, wxWidgets' "Ctrl" is ⌘.
 
