@@ -81,11 +81,15 @@ cd bridge && python3 -m bambukeypad check
 - **Edit**: Move, Rotate, Scale, Cut, Clone, Select All, Undo, Redo.
   **View**: Fit, Iso, Top, Front, Left, Right, Default, Overhang.
   **File**: Save, Save As, Export Sliced, Export G-code, Export STL, Export 3MF, Open, New, Show Folder.
-- **The keypad doesn't follow Bambu Studio yet.** It moves only when you press its
-  keys (state awareness is Phase 2).
-- **Bare-letter keys need the 3D view focused.** Arrange (A), Orient (⇧R), Lay Flat (F),
-  Move, Rotate, Scale, Cut and Fit's fallback (Z) are canvas shortcuts. Use them on the
-  Prepare tab with nothing being typed into. In a text field they type the letter.
+- **The keypad doesn't follow Bambu Studio's tabs.** It moves only when you press its keys.
+- **Keyboard shortcuts are only sent on the Prepare or Preview tab.** On Device (where a
+  print may be running), Project, Calibration or a dialog, a key that needs a shortcut does
+  nothing and the bridge log says why. Keys that click a menu work on any tab where
+  Bambu Studio enables that item.
+- **Bare-letter keys are held back while you type in a field.** Arrange (A), Orient (⇧R),
+  Lay Flat (F), Move, Rotate, Scale, Cut and Fit's fallback (Z) are 3D-view shortcuts.
+  While a settings field has the text cursor they're not sent; click the 3D view first.
+- `python3 -m bambukeypad state` (in `bridge/`) shows which tab the bridge thinks is active.
 
 What each key sends, and how it was verified, is in [docs/shortcuts.md](docs/shortcuts.md).
 
@@ -122,5 +126,6 @@ The protocol is in [docs/protocol.md](docs/protocol.md). Logs are in
 | Nothing, or another app's keys | The keys aren't on the Bambu Studio profile in Options+, or Bambu Studio isn't in front. |
 
 A key that does nothing logs why in the bridge log. `not-front` means Bambu Studio wasn't
-the front app. An `-1743` or "not allowed assistive access" error means Accessibility
+the front app. `tab device` or `tab other` means it wasn't on Prepare or Preview, and
+`typing` means a text field had focus. An `-1743` or "not allowed assistive access" error means Accessibility
 permission is missing.

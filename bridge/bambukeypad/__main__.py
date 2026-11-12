@@ -1,4 +1,4 @@
-"""python3 -m bambukeypad [serve | check | icons DIR]"""
+"""python3 -m bambukeypad [serve | check | state | icons DIR]"""
 
 from __future__ import annotations
 
@@ -50,6 +50,7 @@ def main() -> int:
     serve_cmd = commands.add_parser("serve", help="run the bridge for the Logi plugin")
     serve_cmd.add_argument("--port", type=int, default=None)
     commands.add_parser("check", help="check every menu item against the running Bambu Studio")
+    commands.add_parser("state", help="show what the bridge reads from Bambu Studio (read-only)")
     icons_cmd = commands.add_parser("icons", help="write the key icons as .svg files")
     icons_cmd.add_argument("folder", type=Path)
     args = parser.parse_args()
@@ -65,6 +66,9 @@ def main() -> int:
         return 0
     if args.command == "check":
         return check()
+    if args.command == "state":
+        print(macos.read_state())
+        return 0
     write_icons(args.folder)
     return 0
 

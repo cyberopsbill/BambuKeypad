@@ -3,7 +3,9 @@
 Both go through System Events, so the process running the bridge needs
 Accessibility permission (System Settings → Privacy & Security → Accessibility).
 Scripts take their inputs as arguments (`on run argv`), never by pasting text
-into the script, and keystrokes are only sent while Bambu Studio is in front.
+into the script. A keystroke is sent only when `studio.refusal` allows it: Bambu
+Studio in front, on Prepare or Preview, and for a bare key no text field focused.
+Reading that state is read-only.
 """
 
 from __future__ import annotations
@@ -11,6 +13,7 @@ from __future__ import annotations
 import re
 import subprocess
 
+from . import studio
 from .pages import BUNDLE_ID, Action, Keys, Menu
 
 TIMEOUT_S = 5
@@ -58,6 +61,33 @@ on run argv
     end if
   end tell
   return "ok"
+end run
+"""
+
+# Read-only: the front app, the focused window's static texts and the focused element's role.
+_STATE_SCRIPT = """
+on run argv
+  set out to {}
+  tell application "System Events"
+    set p to first application process whose bundle identifier is (item 1 of argv)
+    set end of out to "front=" & (frontmost of p)
+    try
+      set f to value of attribute "AXFocusedUIElement" of p
+      set end of out to "focus=" & (role of f)
+    end try
+    try
+      set w to value of attribute "AXFocusedWindow" of p
+      -- Fetch the list first: looping over the expression itself re-asks System Events per item, which fails.
+      set texts to value of static texts of w
+      repeat with t in texts
+        try
+          set end of out to "text=" & (t as text)
+        end try
+      end repeat
+    end try
+  end tell
+  set AppleScript's text item delimiters to linefeed
+  return out as text
 end run
 """
 
@@ -114,9 +144,36 @@ def send_keys(keys: Keys) -> str:
     return _osascript(_KEY_SCRIPT, [BUNDLE_ID, keys.key, str(code), *keys.modifiers])
 
 
+def parse_state(output: str) -> studio.Studio:
+    """Turn _STATE_SCRIPT's lines into a Studio. Lines of a multi-line text are ignored."""
+    front, focus, texts = False, None, []
+    for line in output.splitlines():
+        name, _, value = line.partition("=")
+        if name == "front":
+            front = value == "true"
+        elif name == "focus":
+            focus = value
+        elif name == "text":
+            texts.append(value)
+    return studio.classify(front, texts, focus)
+
+
+def read_state() -> studio.Studio:
+    """What Bambu Studio shows now. UNKNOWN (so no keystrokes) if it can't be read."""
+    try:
+        return parse_state(_osascript(_STATE_SCRIPT, [BUNDLE_ID]))
+    except ActionError:
+        return studio.UNKNOWN
+
+
 def run(action: Action) -> str:
-    """Do the action by its first step that works. Returns a description for the log."""
+    """Do the action by its first step that works. Returns a description for the log.
+
+    Menu clicks need no gate: Bambu Studio disables what doesn't apply. A keystroke
+    goes only where `studio.refusal` allows, and the state is read once per action.
+    """
     tried = []
+    state: studio.Studio | None = None
     for step in action.run:
         if isinstance(step, Menu):
             status = menu_status(step, click=True)
@@ -124,7 +181,8 @@ def run(action: Action) -> str:
                 return f"menu {' > '.join(step.path)}"
             tried.append(f"menu {status}")
         else:
-            status = send_keys(step)
+            state = state or read_state()
+            status = studio.refusal(step, state) or send_keys(step)
             if status == "ok":
                 return f"keys {'+'.join((*step.modifiers, step.key))}"
             tried.append(f"keys {status}")

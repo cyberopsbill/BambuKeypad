@@ -7,14 +7,15 @@ README.md covers setup, docs/protocol.md the link, and docs/shortcuts.md what ea
 ## Rules
 
 - **The bridge decides; the plugin relays.** New keys or pages never need a plugin change.
-- **Pure core, thin edge.** `pages`, `navigator`, `faces`, `icons`, `protocol` and `config`
+- **Pure core, thin edge.** `pages`, `navigator`, `studio`, `faces`, `icons`, `protocol` and `config`
   never touch macOS and carry the tests. `macos.py` is the only module that runs osascript.
   `server.py` is the socket.
 - **Never modify Bambu Studio.** Act only through its menus and shortcuts.
 - **Verify before trusting.** Every menu path must pass `python3 -m bambukeypad check`.
   Every keystroke must come from the app's shortcut list (KBShortcutsDialog.cpp at the
   installed version's tag). Record both in docs/shortcuts.md.
-- **Keystrokes only while Bambu Studio is in front.** The key script checks and sends nothing otherwise.
+- **Keystrokes only through `studio.refusal`.** In front, on Prepare/Preview, and bare keys never while a
+  text field has focus. Reading Bambu Studio's state stays read-only.
 - **No secrets in the repo or logs.** The Phase 3 printer access code goes in the macOS Keychain.
 
 ## Conventions
@@ -38,6 +39,8 @@ README.md covers setup, docs/protocol.md the link, and docs/shortcuts.md what ea
   - On the Device tab they really are disabled.
   - `macos.run` treats disabled as "try the next step".
 - **AppleScript:** `front` is a reserved word. Don't use it as a variable name.
+  Fetch a System Events list into a variable before `repeat with x in` it: looping over the
+  expression re-queries per item and fails (the tab read as `other` until this was fixed).
 - **Keyboard Shortcuts dialog:** its side tabs can't be clicked through AX from the background.
   Read KBShortcutsDialog.cpp instead.
 - **Logi Plugin Service** runs the plugin on its own Node (22.19), as `BambuKeypad`, beside `FusionKeypad`.

@@ -35,6 +35,28 @@ On macOS, wxWidgets' "Ctrl" is ⌘.
   refreshes enabled state lazily, and on the Device tab the Edit and View items
   really are disabled. When the bridge sees a disabled item it falls back to the
   keystroke, which worked in testing (Isometric by ⌘7).
-- **Bare-letter keys go to whatever has focus.** A, F, R, M, S, C and Z are canvas
-  shortcuts. If a text field has focus they type into it, and on the Device tab they
-  do nothing useful. Phase 2 should only send them on the Prepare or Preview tab.
+- **Keystrokes are gated by what Bambu Studio shows** (`bridge/bambukeypad/studio.py`).
+  Before an action's first keystroke the bridge reads the front window through
+  Accessibility, read-only, and sends nothing unless Bambu Studio is in front and on
+  Prepare or Preview. A bare key (A, F, M, R, S, C, Z, ⇧R) is also held back while a text
+  field has focus, where it would type the letter. Menu clicks aren't gated. A refused key
+  logs why: `not-front`, `tab device`, `tab other` or `typing`.
+  `python3 -m bambukeypad state` prints what the bridge reads.
+
+## What Bambu Studio exposes to Accessibility
+
+Read on 2026-11-12 from **Bambu Studio 02.09.01.70**, by snapshots of the whole tree on each tab.
+
+- **The top tabs (Prepare, Preview, Device, Project, Calibration) aren't in the tree.**
+  Only the visible tab's controls are, so each tab is recognised by the window's static texts.
+- **Prepare and Preview look identical.** Both show the settings sidebar, headed
+  **Printer**, **Project Filaments** and **Process**. All three must be present.
+- **Device** shows **Printing Progress**, **Camera** and **Control**, plus the job's layer,
+  time and Pause/Stop buttons while printing. Keystrokes are never sent here.
+- **Project** shows a web view (with project info, a "Model" web area); **Calibration**
+  shows its help texts. Neither has the sidebar, so both count as "other".
+- **The 3D view exposes nothing.** The object list isn't in the tree either, so
+  neither the selection nor slicing progress can be read.
+- **A focused setting field reads as `AXTextField`.** With the 3D view in use the focused
+  element is the window itself.
+- **Edit and View menu states are a weak hint at best.** They refresh only when a menu opens.
